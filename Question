@@ -1,0 +1,73 @@
+Problem Statement
+
+
+ABC Challenge
+Problem Description
+Three sisters - Anita, Binita, and Charita, possess a collection of items.
+Each item is marked with the first letter of its owner: A (Anita), B (Binita), or C (Charita).
+The items are arranged in line but not grouped by owner.
+The Challenge
+The goal is to rearrange the items so that all of Anita's items are together, all of Binita's are together, and all of Charita's are together.
+You can pick an item and shift it to another position. When you shift an item, everything in between shifts to make space.
+Some positions are "fixed" - i.e. the item at these spots must stay with the same owner even after rearranging. You have to do this grouping of items with minimum number of shiftings.
+Constraints
+The given string will contain only the characters [A, B, C]
+
+1 <= number of items <= 500
+
+1 <= number of fixed positions <= 10
+
+Input
+First line consists of a single integer denoting the total number of items.
+
+The second line contains a string representing the arrangement of items (space separated), where each character A, B, or C, indicates the owner of the item: Anita, Binita, or Charita respectively.
+
+The third line contains a list of fixed positions (1-based index).
+
+Output
+If it's possible to group all items by owner while keeping the fixed positions unchanged (the owner of the item at those positions must remain the same after rearranging), print the minimum number of shifts needed.
+If it's not possible, print "Impossible".
+Time Limit (secs)
+1
+
+Examples
+Example 1
+
+Input
+
+8
+
+A B C B A C C A
+
+1 4 7
+
+Output
+
+3
+
+Explanation
+
+Given that at the indices {1, 4, 7} the ownership of the items before and after shifting must be same. One possible shifting is shown below, which results in minimum number of shifts.
+
+Keep the A at index 1. Shift the A's at index 5 and 8 to the positions 2 and 3. Number of shifts made so far is 2 and the string becomes AAABCBCC.
+
+Shift the B at index 6 to index 5, the string becomes AAABBCCC, where all the items with same ownership are grouped. Hence the number of shifts made is 2 + 1 = 3 which is minimum possible.
+
+Example 2
+
+Input
+
+10
+
+C A B B C C B A B C
+
+1 4 10
+
+Output
+
+Impossible
+
+Explanation
+
+Given that the ownership of items at positions {1, 4, 10} must remain unchanged after the rearrangement, we can observe that no matter how the items are shifted, it's not possible to group each person's items together while satisfying this condition. Therefore, the output should be "Impossible".
+  
