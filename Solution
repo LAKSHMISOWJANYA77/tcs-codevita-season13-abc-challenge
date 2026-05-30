@@ -1,0 +1,119 @@
+import java.util.*;
+
+public class ABC {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int N = 0;
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine().trim();
+            if (line.isEmpty()) continue;
+            N = Integer.parseInt(line);
+            break;
+        }
+
+        String[] tokens = null;
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine().trim();
+            if (line.isEmpty()) continue;
+            tokens = line.split("\\s+");
+            if (tokens.length < N) {
+                List<String> list = new ArrayList<>();
+                for (String t : tokens) list.add(t);
+                while (list.size() < N && sc.hasNext()) {
+                    String next = sc.next().trim();
+                    if (!next.isEmpty()) list.add(next);
+                }
+                tokens = list.toArray(new String[0]);
+                if (sc.hasNextLine()) sc.nextLine();
+            }
+            break;
+        }
+
+        if (tokens == null || tokens.length != N) {
+            System.out.print("Impossible");
+            return;
+        }
+
+        char[] initial = new char[N];
+        for (int i = 0; i < N; i++) {
+            initial[i] = tokens[i].trim().toUpperCase().charAt(0);
+        }
+
+        List<Integer> fixedPos = new ArrayList<>();
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine().trim();
+            if (line.isEmpty()) continue;
+            String[] parts = line.split("\\s+");
+            for (String p : parts) {
+                if (p.matches("\\d+")) fixedPos.add(Integer.parseInt(p));
+            }
+            break;
+        }
+
+        int cntA = 0, cntB = 0, cntC = 0;
+        for (char ch : initial) {
+            if (ch == 'A') cntA++;
+            else if (ch == 'B') cntB++;
+            else if (ch == 'C') cntC++;
+        }
+
+        char[] owners = {'A', 'B', 'C'};
+        List<char[]> perms = new ArrayList<>();
+        permute(owners, 0, perms);
+
+        int best = Integer.MAX_VALUE;
+        boolean valid = false;
+
+        for (char[] order : perms) {
+            char[] target = new char[N];
+            int idx = 0;
+            for (char c : order) {
+                int count = (c == 'A') ? cntA : (c == 'B') ? cntB : cntC;
+                for (int k = 0; k < count; k++) target[idx++] = c;
+            }
+
+            boolean ok = true;
+            for (int pos : fixedPos) {
+                if (pos < 1 || pos > N || initial[pos - 1] != target[pos - 1]) {
+                    ok = false; break;
+                }
+            }
+            if (!ok) continue;
+
+            int lcs = lcsLen(initial, target);
+            int moves = N - lcs;
+            best = Math.min(best, moves);
+            valid = true;
+        }
+
+        if (!valid) System.out.print("Impossible");
+        else System.out.print(best);
+    }
+
+    private static void permute(char[] a, int l, List<char[]> out) {
+        if (l == a.length) {
+            out.add(Arrays.copyOf(a, a.length));
+            return;
+        }
+        for (int i = l; i < a.length; i++) {
+            char t = a[l]; a[l] = a[i]; a[i] = t;
+            permute(a, l + 1, out);
+            t = a[l]; a[l] = a[i]; a[i] = t;
+        }
+    }
+
+    private static int lcsLen(char[] a, char[] b) {
+        int n = a.length, m = b.length;
+        int[] prev = new int[m + 1];
+        for (int i = 1; i <= n; i++) {
+            int[] cur = new int[m + 1];
+            for (int j = 1; j <= m; j++) {
+                if (a[i - 1] == b[j - 1]) cur[j] = prev[j - 1] + 1;
+                else cur[j] = Math.max(prev[j], cur[j - 1]);
+            }
+            prev = cur;
+        }
+        return prev[m];
+    }
+}
